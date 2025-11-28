@@ -1,0 +1,34 @@
+# ---- Binary media files ----
+*.mp4
+*.mov
+*.avi
+
+# ---- PyInstaller build outputs ----
+/dist/
+/build/
+*.spec
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+env/
+*.env
+
+# ---- Office temporary files ----
+~$*.xlsx
+~$*.xls
+~$*.docx
+~$*.pptx
+
+# ---- IDE files ----
+.idea/
+.vscode/
+
+# ---- Temp & logs ----
+*.log
+*.tmp
+*.bak
