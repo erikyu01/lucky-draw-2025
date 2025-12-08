@@ -373,8 +373,8 @@ def perform_draw():
     # NORMAL GRID MODE FOR PRIZES > 5
     # --------------------------------------------
 
-    # When 15 entries (3×5) are shown → clear screen
-    if count_num >= 15:
+    # When 20 entries (4×5) are shown → clear screen
+    if count_num >= 20:
         for widget in root.winfo_children():
             if widget != background_label:
                 try:
@@ -384,13 +384,12 @@ def perform_draw():
         count_num = 0
 
     # 4 columns, 5 rows
-    col = count_num // 5  # still 0–4 rows
-    row = count_num % 5  # still 0–4 rows
-    col = col % 4  # wrap into 3 columns
+    col = count_num // 5  # 0–3 for columns
+    row = count_num % 5  # 0–4 for rows
 
-    # Position spacing for 3 columns
-    base_x = 0.15 + 0.28 * col
-    base_y = 0.30 + 0.12 * row
+    # Position spacing for 4 columns
+    base_x = 0.10 + 0.22 * col  # adjust as needed
+    base_y = 0.30 + 0.12 * row  # adjust as needed
 
     # Smaller font
     grid_font_size = 24
