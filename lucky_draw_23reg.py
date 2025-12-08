@@ -289,8 +289,8 @@ def perform_draw():
             break
 
     emp_no = data[idx][0]
-    first = data[idx][1]
-    last = data[idx][2]
+    first = str(data[idx][1]).strip()
+    last = str(data[idx][2]).strip()
     result = f"{first} {last} ({emp_no})"
 
     # Save logs
@@ -373,8 +373,8 @@ def perform_draw():
     # NORMAL GRID MODE FOR PRIZES > 5
     # --------------------------------------------
 
-    # CLEAR SCREEN AFTER 25 NAMES
-    if count_num >= 25:
+    # When 15 entries (3×5) are shown → clear screen
+    if count_num >= 15:
         for widget in root.winfo_children():
             if widget != background_label:
                 try:
@@ -383,16 +383,17 @@ def perform_draw():
                     pass
         count_num = 0
 
-    # 5 columns, 5 rows
-    col = count_num // 5     # 0–4
-    row = count_num % 5      # 0–4
+    # 4 columns, 5 rows
+    col = count_num // 5  # still 0–4 rows
+    row = count_num % 5  # still 0–4 rows
+    col = col % 4  # wrap into 3 columns
 
-    # Position spacing (slightly tighter for smaller font)
-    base_x = 0.10 + 0.18 * col
+    # Position spacing for 3 columns
+    base_x = 0.15 + 0.28 * col
     base_y = 0.30 + 0.12 * row
 
     # Smaller font
-    grid_font_size = 18
+    grid_font_size = 24
 
     num_lbl = tk.Label(
         root,

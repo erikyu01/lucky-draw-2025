@@ -81,8 +81,8 @@ def perform_bonus_draw(event=None):
 
     # Extract guest info
     emp_no = data[idx][0]
-    first = data[idx][1]
-    last = data[idx][2]
+    first = str(data[idx][1]).strip()
+    last = str(data[idx][2]).strip()
     result_text = f"{first} {last} ({emp_no})"
 
     # Save logs
@@ -105,7 +105,7 @@ def perform_bonus_draw(event=None):
     col = count_num // 5
     row = count_num % 5
 
-    base_x = 0.15 + 0.3 * col
+    base_x = 0.15 + 0.30 * col
     base_y = 0.36 + 0.12 * row
 
     # Draw labels
