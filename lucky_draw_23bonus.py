@@ -17,6 +17,13 @@ h = root.winfo_screenheight()
 root.geometry(f"{w}x{h}")
 root.configure(bg="white")
 
+# -----------------------------
+# FONT SETTINGS (Unified)
+# -----------------------------
+BONUS_FONT_SIZE = 23
+BONUS_FONT = ("Arial", BONUS_FONT_SIZE)
+BONUS_FONT_BOLD = ("Arial", BONUS_FONT_SIZE, "bold")
+
 # ---------------------------------------------------
 # LOAD BACKGROUND
 # ---------------------------------------------------
@@ -83,7 +90,8 @@ def perform_bonus_draw(event=None):
     emp_no = data[idx][0]
     first = str(data[idx][1]).strip()
     last = str(data[idx][2]).strip()
-    result_text = f"{first} {last} ({emp_no})"
+    last_short = last.strip()[0].upper() + "."
+    result_text = f"{first} {last_short} ({emp_no})"
 
     # Save logs
     with open(HISTORY_FILE, "a") as f:
@@ -95,7 +103,7 @@ def perform_bonus_draw(event=None):
     # ------------------------------
     # CLEAR SCREEN AFTER 15 ENTRIES
     # ------------------------------
-    if count_num >= 15:
+    if count_num >= 20:
         clear_grid()
         count_num = 0
 
@@ -105,20 +113,20 @@ def perform_bonus_draw(event=None):
     col = count_num // 5
     row = count_num % 5
 
-    base_x = 0.15 + 0.30 * col
-    base_y = 0.36 + 0.12 * row
+    base_x = 0.10 + 0.2 * col  # adjust as needed
+    base_y = 0.30 + 0.12 * row  # adjust as needed
 
     # Draw labels
     num_lbl = tk.Label(root,
                        text="Bonus:",
-                       font=("Arial", 23, "bold"),
+                       font=BONUS_FONT,
                        fg=NORMAL_NUM_FG,
                        bg=NORMAL_BG)
     num_lbl.place(relx=base_x, rely=base_y, anchor="se")
 
     name_lbl = tk.Label(root,
                         text=result_text,
-                        font=("Arial", 23),
+                        font=BONUS_FONT,
                         fg=NORMAL_NAME_FG,
                         bg=NORMAL_BG)
     name_lbl.place(relx=base_x, rely=base_y, anchor="sw")
@@ -168,7 +176,7 @@ def draw_bonus_label(name):
     """
     global count_num
 
-    if count_num >= 15:
+    if count_num >= 20:
         clear_grid()
         count_num = 0
 
@@ -180,14 +188,14 @@ def draw_bonus_label(name):
 
     num_lbl = tk.Label(root,
                        text="Bonus:",
-                       font=("Arial", 23, "bold"),
+                       font=BONUS_FONT,
                        fg=NORMAL_NUM_FG,
                        bg=NORMAL_BG)
     num_lbl.place(relx=base_x, rely=base_y, anchor="se")
 
     name_lbl = tk.Label(root,
                         text=name,
-                        font=("Arial", 23),
+                        font=BONUS_FONT,
                         fg=NORMAL_NAME_FG,
                         bg=NORMAL_BG)
     name_lbl.place(relx=base_x, rely=base_y, anchor="sw")

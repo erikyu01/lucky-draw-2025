@@ -291,7 +291,8 @@ def perform_draw():
     emp_no = data[idx][0]
     first = str(data[idx][1]).strip()
     last = str(data[idx][2]).strip()
-    result = f"{first} {last} ({emp_no})"
+    last_short = last.strip()[0].upper() + "."
+    result = f"{first} {last_short} ({emp_no})"
 
     # Save logs
     with open("history_log.txt", "a") as f:
@@ -336,9 +337,9 @@ def perform_draw():
 
         elif prize_left in (3, 2):
             # Keep current style (same as above actually)
-            num_fg = "gold"
-            name_fg = "white"
-            bg = "#152238"
+            num_fg = "#b0872e"
+            name_fg = "#0A2A43"
+            bg = "#FFFFFF"
 
         elif prize_left == 1:
             display_1st_prize_name(f"#1: {result}")
@@ -387,12 +388,20 @@ def perform_draw():
     col = count_num // 5  # 0–3 for columns
     row = count_num % 5  # 0–4 for rows
 
-    # Position spacing for 4 columns
-    base_x = 0.10 + 0.22 * col  # adjust as needed
-    base_y = 0.30 + 0.12 * row  # adjust as needed
+    # --------------------------------------------
+    # DIFFERENT GRID CENTERING FOR #16 → #6
+    # --------------------------------------------
+    if 5 < prize_left <= 15:
+        # Centered version for this specific range
+        base_x = 0.22 + 0.35 * col
+        base_y = 0.28 + 0.12 * row
+    else:
+        # Original placement for all other normal-grid draws
+        base_x = 0.10 + 0.2 * col
+        base_y = 0.30 + 0.12 * row
 
     # Smaller font
-    grid_font_size = 24
+    grid_font_size = 20
 
     num_lbl = tk.Label(
         root,
