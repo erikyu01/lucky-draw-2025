@@ -36,7 +36,7 @@ background_label.place(x=0, y=0)
 # ---------------------------------------------------
 # LOAD EXCEL
 # ---------------------------------------------------
-data = pd.read_excel("2025_test.xlsx").values.tolist()
+data = pd.read_excel("2025_list.xlsx").values.tolist()
 guest_number = len(data)
 
 # ---------------------------------------------------
@@ -103,7 +103,7 @@ def perform_bonus_draw(event=None):
     # ------------------------------
     # CLEAR SCREEN AFTER 15 ENTRIES
     # ------------------------------
-    if count_num >= 20:
+    if count_num >= 15:
         clear_grid()
         count_num = 0
 
@@ -113,7 +113,7 @@ def perform_bonus_draw(event=None):
     col = count_num // 5
     row = count_num % 5
 
-    base_x = 0.10 + 0.2 * col  # adjust as needed
+    base_x = 0.10 + 0.26 * col  # adjust as needed
     base_y = 0.30 + 0.12 * row  # adjust as needed
 
     # Draw labels
@@ -176,14 +176,14 @@ def draw_bonus_label(name):
     """
     global count_num
 
-    if count_num >= 20:
+    if count_num >= 15:
         clear_grid()
         count_num = 0
 
     col = count_num // 5
     row = count_num % 5
 
-    base_x = 0.15 + 0.3 * col
+    base_x = 0.10 + 0.26 * col
     base_y = 0.36 + 0.12 * row
 
     num_lbl = tk.Label(root,

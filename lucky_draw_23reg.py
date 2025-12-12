@@ -102,7 +102,7 @@ previous_winner_label = None
 previous_winner_label_number = None
 
 # Load Excel
-data = pd.read_excel("2025_test.xlsx").values.tolist()
+data = pd.read_excel("2025_list.xlsx").values.tolist()
 guest_number = len(data)
 
 # -------------------- SPACE WAIT VARIABLE --------------------
@@ -301,15 +301,15 @@ def perform_draw():
         f.write(f"#{prize_left}: {result}\n")
 
     # --------------------------------------------
-    # ⭐ DISPLAY TOP-5 RESULT
+    # ⭐ DISPLAY TOP-4 RESULT
     # --------------------------------------------
     # --------------------------------------------
-    # ⭐ DISPLAY TOP-5 RESULT (with custom colors)
+    # ⭐ DISPLAY TOP-4 RESULT (with custom colors)
     # --------------------------------------------
-    if prize_left <= 5:
+    if prize_left <= 4:
 
-        # When #5 appears → clear EVERYTHING except background
-        if prize_left == 5:
+        # When #4 appears → clear EVERYTHING except background
+        if prize_left == 4:
             for widget in root.winfo_children():
                 if widget != background_label:
                     try:
@@ -329,7 +329,7 @@ def perform_draw():
         # -------------------------------
         # 🎨 COLOR LOGIC FOR TOP 5
         # -------------------------------
-        if prize_left in (5, 4):
+        if prize_left == 4:
             # First two of top 5 → same as before
             num_fg = "#b0872e"
             name_fg = "#0A2A43"
@@ -384,21 +384,44 @@ def perform_draw():
                     pass
         count_num = 0
 
-    # 4 columns, 5 rows
-    col = count_num // 5  # 0–3 for columns
-    row = count_num % 5  # 0–4 for rows
+    # --------------------------------------------
+    # SPECIAL LAYOUT FOR 4TH DRAW (11 prizes)
+    # --------------------------------------------
+    if prize_left <= 11 and prize_left > 4:
+        # 3 columns:
+        # col 0 = 4 rows
+        # col 1 = 4 rows
+        # col 2 = 3 rows
+
+        if count_num < 4:
+            col = 0
+            row = count_num
+        elif count_num < 8:
+            col = 1
+            row = count_num - 4
+        else:
+            col = 2
+            row = count_num - 8
+
+    else:
+        # DEFAULT BEHAVIOR (unchanged)
+        col = count_num // 5
+        row = count_num % 5
 
     # --------------------------------------------
     # DIFFERENT GRID CENTERING FOR #16 → #6
     # --------------------------------------------
-    if 5 < prize_left <= 15:
-        # Centered version for this specific range
-        base_x = 0.22 + 0.35 * col
-        base_y = 0.28 + 0.12 * row
+    if prize_left <= 11 and prize_left > 4:
+        # Centered 3-column layout for 4th draw
+        base_x = 0.15 + 0.25 * col
+        base_y = 0.32 + 0.12 * row
+    elif 5 < prize_left <= 15:
+        base_x = 0.15 + 0.35 * col
+        base_y = 0.32 + 0.12 * row
     else:
         # Original placement for all other normal-grid draws
-        base_x = 0.10 + 0.2 * col
-        base_y = 0.30 + 0.12 * row
+        base_x = 0.08 + 0.21 * col
+        base_y = 0.32 + 0.12 * row
 
     # Smaller font
     grid_font_size = 20
@@ -667,7 +690,6 @@ def handle_escape(event):
     cleanup_video()
     root.quit()
     root.destroy()
-
 
 def skip_video(event):
     """Skip video if it's playing"""
