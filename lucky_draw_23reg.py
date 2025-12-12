@@ -20,6 +20,7 @@ root.configure(bg="white")
 
 osc_stage_shown = False
 first_prize_label = None
+top_winner_container = None
 first_prize_at_plane = False   # tracks position
 first_prize_animating = False  # prevents double trigger
 
@@ -291,8 +292,13 @@ def perform_draw():
     emp_no = data[idx][0]
     first = str(data[idx][1]).strip()
     last = str(data[idx][2]).strip()
-    last_short = last.strip()[0].upper() + "."
-    result = f"{first} {last_short} ({emp_no})"
+
+    # FULL NAME for last 4 prizes
+    if prize_left <= 4:
+        result = f"{first} {last} ({emp_no})"
+    else:
+        last_short = last[0].upper() + "."
+        result = f"{first} {last_short} ({emp_no})"
 
     # Save logs
     with open("history_log.txt", "a") as f:
@@ -346,26 +352,13 @@ def perform_draw():
             return
 
         # -------------------------------
-        # POSITION FOR TOP 5
+        # CENTERED DISPLAY FOR #4 / #3 / #2
         # -------------------------------
-
-        # Default center position
-        pos_x = 0.35
-        pos_y = 0.55
-
-        # Raise #3 and #2 slightly higher (OSC request)
+        y_pos = 0.55
         if prize_left in (3, 2):
-            pos_y = 0.30   # <-- lifted upward (was 0.55)
+            y_pos = 0.28  # 保留你原来的“往上抬”
 
-        num_lbl = tk.Label(root, text=f"#{prize_left}: ",
-                           font=("Arial", 60, "bold"), fg=num_fg, bg=bg)
-        num_lbl.place(relx=pos_x, rely=pos_y, anchor="se")
-        previous_winner_label_number = num_lbl
-
-        name_lbl = tk.Label(root, text=result,
-                            font=("Arial", 60, "bold"), fg=name_fg, bg=bg)
-        name_lbl.place(relx=pos_x, rely=pos_y, anchor="sw")
-        previous_winner_label = name_lbl
+        display_centered_winner(prize_left, result, y=y_pos)
 
         osc_stage_shown = False
         return
@@ -544,6 +537,7 @@ def handle_space(event):
 def handle_redraw(event):
     global osc_stage_shown
     global first_prize_label, first_prize_at_plane, first_prize_animating
+    global top_winner_container
 
     if not os.path.exists("Winner_List.txt"):
         return
@@ -562,6 +556,16 @@ def handle_redraw(event):
         if hist_lines:
             with open("history_log.txt", "w") as f:
                 f.writelines(hist_lines[:-1])
+
+    # ---------------------------------------------------
+    # FIX 3 — If currently showing #4 / #3 / #2, remove container
+    # ---------------------------------------------------
+    if top_winner_container is not None:
+        try:
+            top_winner_container.destroy()
+        except:
+            pass
+        top_winner_container = None
 
     # ---------------------------------------------------
     # FIX 1 — Prevent showing OSC stages again
@@ -600,6 +604,44 @@ def display_1st_prize_name(winner_text):
         pady=10
     )
     first_prize_label.place(relx=0.5, rely=0.5, anchor="center")
+
+def display_centered_winner(rank, result_text, y=0.5):
+    """
+    Display #4 / #3 / #2 centered horizontally.
+    """
+    global top_winner_container
+
+    # 🔥 清除旧的（如果存在）
+    if top_winner_container is not None:
+        try:
+            top_winner_container.destroy()
+        except:
+            pass
+        top_winner_container = None
+
+    container = tk.Frame(root, bg="#FFFFFF")
+    container.place(relx=0.5, rely=y, anchor="center")
+
+    num_lbl = tk.Label(
+        container,
+        text=f"#{rank}: ",
+        font=("Arial", 60, "bold"),
+        fg="#b0872e",
+        bg="#FFFFFF"
+    )
+    num_lbl.pack(side="left")
+
+    name_lbl = tk.Label(
+        container,
+        text=result_text,
+        font=("Arial", 60, "bold"),
+        fg="#0A2A43",
+        bg="#FFFFFF"
+    )
+    name_lbl.pack(side="left")
+
+    # 🔥 保存引用，供 redraw / 下次使用
+    top_winner_container = container
 
 def animate_first_prize_move(start_x, start_y, end_x, end_y):
     global first_prize_label, first_prize_animating
